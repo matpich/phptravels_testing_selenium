@@ -1,0 +1,1 @@
+I made this project just to show my testing skills with selenium. I choose "https://www.phptravels.net/" as a playground. It's a travel agency demo website. I think it's a perfect website to practice.
