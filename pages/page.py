@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import time
+import random
 
 class BasePage():
     '''Base class to initialize in all page objects'''
@@ -96,3 +97,37 @@ class LoginPage(BasePage):
         self.fill_forget_email('')
         self.click_reset_bttn()
 
+class RegisterPage(BasePage):
+
+    def fill_first_name(self,name):
+        self.input_into_box(name, locators.REGISTER_FIRST_NAME)
+
+    def fill_last_name(self,last_name):
+        self.input_into_box(last_name, locators.REGISTER_LAST_NAME)
+
+    def fill_mobile(self,mobile):
+        self.input_into_box(mobile, locators.REGISTER_MOBILE_NUMBER)
+
+    def fill_email(self,address):
+        self.input_into_box(address, locators.REGISTER_EMAIL)
+
+    def fill_password(self,password):
+        self.input_into_box(password, locators.REGISTER_PASSWORD)
+
+    def fill_confirm_password(self,confirm_password):
+        self.input_into_box(confirm_password, locators.REGISTER_CONFIRM_PASSWORD)
+
+    def click_signup_bttn(self):
+        self.click_element(locators.REGISTER_SIGN_UP_BUTTON)
+
+    def valid_register(self):
+        self.logout_if_logged_in()
+        self.fill_first_name("John")
+        self.fill_last_name("Doe")
+        self.fill_mobile("123456789")
+        self.fill_email("john{}.doe@doe.doe".format(random.randint(0,9999)))
+        self.fill_password("qwerty")
+        self.fill_confirm_password("qwerty")
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.title_is("My Account"))
+        self.is_logged = True

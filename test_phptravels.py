@@ -1,7 +1,7 @@
 import unittest
 from selenium import webdriver
 import time
-from pages.page import LoginPage
+from pages.page import LoginPage, RegisterPage
 
 def setUpModule():
     global driver
@@ -37,3 +37,13 @@ class LoginFunctionality(unittest.TestCase):
         self.login_page.invalid_forget()
         self.assertIn('alert alert-danger', driver.page_source)
 
+class RegisterFunctionality(unittest.TestCase):
+
+    def setUp(self):
+        driver.get("https://www.phptravels.net/register")
+        self.register_page = RegisterPage(driver)
+
+    def test_valid_register(self):
+        self.register_page.valid_register()
+        self.assertEqual(driver.current_url, 'https://www.phptravels.net/account/')
+        self.assertIn('Hi, John Doe', driver.page_source)        
