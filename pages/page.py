@@ -8,16 +8,18 @@ import random
 
 class BasePage():
     '''Base class to initialize in all page objects'''
+
+    is_logged = False
+
     def __init__(self,driver):
         self.driver = driver
-        self.is_logged = False
-
+        
     def logout(self):
         self.driver.get('https://www.phptravels.net/account/logout')
-        self.is_logged = False
+        BasePage.is_logged = False
 
     def logout_if_logged_in(self):
-        if self.is_logged: self.logout()
+        if BasePage.is_logged: self.logout()
 
     def input_into_box(self, value, location):
         '''Input search values into box.'''
@@ -69,7 +71,7 @@ class LoginPage(BasePage):
         self.fill_password('demouser')
         self.click_login_bttn()
         #WebDriverWait(self.driver, 10).until(EC.title_is("My Account"))
-        self.is_logged = True
+        BasePage.is_logged = True
 
     def invalid_login(self):
         self.logout_if_logged_in()
@@ -121,7 +123,6 @@ class RegisterPage(BasePage):
         self.click_element(locators.REGISTER_SIGN_UP_BUTTON)
 
     def valid_register(self):
-        self.logout_if_logged_in()
         self.fill_first_name("John")
         self.fill_last_name("Doe")
         self.fill_mobile("123456789")
@@ -130,4 +131,48 @@ class RegisterPage(BasePage):
         self.fill_confirm_password("qwerty")
         self.click_signup_bttn()
         WebDriverWait(self.driver, 10).until(EC.title_is("My Account"))
-        self.is_logged = True
+        BasePage.is_logged = True
+
+    def existing_email_register(self):
+        self.fill_first_name("John")
+        self.fill_last_name("Doe")
+        self.fill_mobile("123456789")
+        self.fill_email("user@phptravels.com")
+        self.fill_password("qwerty")
+        self.fill_confirm_password("qwerty")
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locators.ERROR_BOX))
+
+    def short_password_register(self):
+        self.fill_first_name("John")
+        self.fill_last_name("Doe")
+        self.fill_mobile("123456789")
+        self.fill_email("john{}.doe@doe.doe".format(random.randint(0,9999)))
+        self.fill_password("qwe")
+        self.fill_confirm_password("qwe")
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locators.ERROR_BOX))
+
+    def mismatching_password_register(self):
+        self.fill_first_name("John")
+        self.fill_last_name("Doe")
+        self.fill_mobile("123456789")
+        self.fill_email("john{}.doe@doe.doe".format(random.randint(0,9999)))
+        self.fill_password("qwerty")
+        self.fill_confirm_password("asdfgh")
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locators.ERROR_BOX))
+
+    def empty_register(self):
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locators.ERROR_BOX))
+
+    def no_mobile_register(self):
+        self.fill_first_name("John")
+        self.fill_last_name("Doe")
+        self.fill_email("john{}.doe@doe.doe".format(random.randint(0,9999)))
+        self.fill_password("qwerty")
+        self.fill_confirm_password("qwerty")
+        self.click_signup_bttn()
+        WebDriverWait(self.driver, 10).until(EC.title_is("My Account"))
+        BasePage.is_logged = True

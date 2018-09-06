@@ -1,5 +1,8 @@
 from selenium.webdriver.common.by import By
 
+#common
+ERROR_BOX = (By.XPATH, "//div[@class='alert alert-danger']")
+
 #login page elements
 LOGIN_EMAIL = (By.XPATH,"//input[@name='username']")
 LOGIN_PASSWORD = (By.XPATH, "//input[@name='password']")
